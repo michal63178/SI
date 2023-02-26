@@ -7,10 +7,10 @@ data = numpy.loadtxt(
 )
 most_common = numpy.empty(
     (data.shape[1],),
-    str
+    data.dtype
 )
 
-for attribute in range(1, data.shape[1]):
+for attribute in range(data.shape[1]):
     column = numpy.unique(
         data[:, attribute],
         return_counts=True)
@@ -19,14 +19,29 @@ for attribute in range(1, data.shape[1]):
         column[1]),
         key=lambda item: item[1],
         reverse=True))
-    most_common[attribute - 1] = column[0][0]
+    most_common[attribute] = column[0][0]
     print(f'attribute {attribute}: '
-          f'{", ".join(column[0])}')
+          f'{", ".join([name for name, occurrences in column])}')
 
+size = round(data.size * 1.1)
+size += data.shape[1] - size % data.shape[1]
 extended = numpy.empty(
-    round(data.size * 1.1),
-    str
+    (size,),
+    data.dtype
 )
 
-for index in range(data.size):
+index = 0
 
+for row in range(data.shape[0]):
+    for column in range(data.shape[1]):
+        extended[index] = data[row][column]
+        index += 1
+
+for index in range(data.size, extended.size):
+    extended[index] = '?'
+
+extended = extended.reshape((-1, 7))
+
+for attribute in range(extended.shape[1]):
+    extended[data.shape[0]:, attribute] = \
+        most_common[attribute]
