@@ -1,9 +1,30 @@
 import numpy
 
+# 3
+# a), b)
+
 data = numpy.loadtxt(
     'car.txt',
     str
 )
+
+decision_classes, size = \
+    numpy.unique(
+        data[:, -1],
+        return_counts=True
+    )
+result = (f'{item[0]}-{item[1]}'
+          for item in
+          zip(decision_classes,
+              size))
+
+print(f'3\na), b)\ndecision class-size:\n'
+      f'{", ".join(result)}\n')
+
+# d), e)
+
+print('d), e)')
+
 most_common = numpy.empty(
     (data.shape[1],),
     data.dtype
@@ -13,14 +34,24 @@ for attribute in range(data.shape[1]):
     column = numpy.unique(
         data[:, attribute],
         return_counts=True)
+    values = ', '.join(column[0])
     column = sorted(zip(
         column[0],
         column[1]),
         key=lambda item: item[1],
         reverse=True)
     most_common[attribute] = column[0][0]
-    print(f'attribute {attribute}: '
-          f'{", ".join([name for name, occurrences in column])}')
+
+    print(
+        f'attribute {attribute}\n'
+        f'number-(unique values):\n'
+        f'{len(column)}-({values})'
+    )
+
+print()
+
+# 4
+# a)
 
 size = round(data.size * 1.1)
 size += data.shape[1] - size % data.shape[1]
@@ -44,6 +75,15 @@ extended = extended.reshape((-1, 7))
 for attribute in range(extended.shape[1]):
     extended[data.shape[0]:, attribute] = \
         most_common[attribute]
+
+print('4\na)')
+
+for row in extended:
+    print(', '.join(row))
+
+print('\n')
+
+# d)
 
 data_2 = numpy.loadtxt(
     'Churn_Modelling.csv',
@@ -72,3 +112,8 @@ data_2 = numpy.concatenate(
     ),
     1
 )
+
+print('d)')
+
+for row in data_2:
+    print(', '.join(row))
