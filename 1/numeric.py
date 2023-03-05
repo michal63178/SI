@@ -6,7 +6,7 @@ data = numpy.loadtxt(
 )
 
 # 3
-# c)
+# c), f)
 
 for attribute in range(data.shape[1] - 1):
     column = data[:, attribute]
